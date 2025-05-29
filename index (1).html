@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threads - Social Media</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #000;
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+
+        /* Left Sidebar */
+        .sidebar {
+            padding: 20px;
+            border-right: 1px solid #333;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .nav-item:hover {
+            background-color: #1a1a1a;
+        }
+
+        .nav-item.active {
+            background-color: #333;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 16px;
+        }
+
+        .post-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        /* Auth Section */
+        .auth-section {
+            margin-bottom: 20px;
+            padding: 16px;
+            background-color: #1a1a1a;
+            border-radius: 12px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .auth-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid #666;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .main-content {
+            border-right: 1px solid #333;
+            min-height: 100vh;
+        }
+
+        .header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #333;
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* Compose Area */
+        .compose-area {
+            padding: 16px 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        .compose-container {
+            display: flex;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .compose-input {
+            flex: 1;
+        }
+
+        .compose-textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 18px;
+            resize: none;
+            outline: none;
+            min-height: 60px;
+            font-family: inherit;
+        }
+
+        .compose-textarea::placeholder {
+            color: #666;
+        }
+
+        .compose-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding-left: 52px;
+        }
+
+        .compose-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+
+        .compose-btn.active {
+            opacity: 1;
+        }
+
+        /* Feed */
+        .feed {
+            padding-bottom: 20px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .post {
+            padding: 16px 20px;
+            border-bottom: 1px solid #333;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .post:hover {
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+
+        .post-header {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .post-content {
+            margin-left: 52px;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .username {
+            font-weight: bold;
+        }
+
+        .handle {
+            color: #666;
+        }
+
+        .timestamp {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .post-text {
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 60px;
+            margin-top: 12px;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .action-btn.liked {
+            color: #ff6b6b;
+        }
+
+        /* Right Sidebar */
+        .right-sidebar {
+            padding: 20px;
+        }
+
+        .widget {
+            background-color: #1a1a1a;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .widget-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .trending-item {
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .trending-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .trending-category {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .trending-topic {
+            font-weight: bold;
+            margin: 2px 0;
+        }
+
+        .trending-posts {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .suggestion-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+            cursor: pointer;
+        }
+
+        .suggestion-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .suggestion-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .suggestion-info {
+            flex: 1;
+        }
+
+        .suggestion-name {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .suggestion-handle {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .follow-btn {
+            background: transparent;
+            border: 1px solid #666;
+            color: #fff;
+            padding: 4px 16px;
+            border-radius: 16px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .follow-btn:hover {
+            background-color: #fff;
+            color: #000;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 80px 1fr;
+            }
+            
+            .right-sidebar {
+                display: none;
+            }
+            
+            .nav-item span {
+                display: none;
+            }
+            
+            .sidebar {
+                width: 80px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+        }
+
+        .message {
+            padding: 12px 20px;
+            margin: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .error {
+            background-color: rgba(255, 107, 107, 0.1);
+            border: 1px solid #ff6b6b;
+            color: #ff6b6b;
+        }
+
+        .success {
+            background-color: rgba(78, 205, 196, 0.1);
+            border: 1px solid #4ecdc4;
+            color: #4ecdc4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+            <div class="logo">Threads</div>
+            
+            <!-- Auth Section -->
+            <div class="auth-section" id="authSection">
+                <div id="loginSection">
+                    <button class="auth-btn" id="loginBtn">Sign In with Google</button>
+                </div>
+                <div id="userSection" style="display: none;">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userAvatar">U</div>
+                        <div>
+                            <div id="userName" style="font-size: 14px; font-weight: bold;"></div>
+                            <div id="userEmail" style="font-size: 12px; color: #666;"></div>
+                        </div>
+                    </div>
+                    <button class="logout-btn" id="logoutBtn">Sign Out</button>
+                </div>
+            </div>
+
+            <nav>
+                <a href="#" class="nav-item active">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <span>Home</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M21 6h-2l-1.27-1.27c-.4-.4-.86-.73-1.73-.73H8c-.87 0-1.33.33-1.73.73L5 6H3c-.55 0-1 .45-1 1s.45 1 1 1h1v11c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8h1c.55 0 1-.45 1-1s-.45-1-1-1z"/>
+                    </svg>
+                    <span>Search</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Notifications</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                    </svg>
+                    <span>Messages</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                    <span>Profile</span>
+                </a>
+            </nav>
+            <button class="post-btn" id="newThreadBtn">New Thread</button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1>Home</h1>
+            </div>
+
+            <!-- Messages -->
+            <div id="messages"></div>
+
+            <!-- Compose Area -->
+            <div class="compose-area" id="composeArea" style="display: none;">
+                <div class="compose-container">
+                    <div class="avatar" id="composeAvatar">U</div>
+                    <div class="compose-input">
+                        <textarea class="compose-textarea" placeholder="What's happening?" id="composeText"></textarea>
+                        <div class="compose-actions">
+                            <div></div>
+                            <button class="compose-btn" id="postBtn">Post</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feed -->
+            <div class="feed" id="feed">
+                <div class="loading">Loading posts...</div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="right-sidebar">
+            <div class="widget">
+                <div class="widget-title">What's happening</div>
+                <div class="trending-item">
+                    <div class="trending-category">Trending in Technology</div>
+                    <div class="trending-topic">#WebDevelopment</div>
+                    <div class="trending-posts">42.1K posts</div>
+                </div>
+                <div class="trending-item">
+                    <div class="trending-category">Trending</div>
+                    <div class="trending-topic">#Firebase</div>
+                    <div class="trending-posts">18.3K posts</div>
+                </div>
+                <div class="trending-item">
+                    <div class="trending-category">Technology · Trending</div>
+                    <div class="trending-topic">JavaScript</div>
+                    <div class="trending-posts">95.2K posts</div>
+                </div>
+            </div>
+
+            <div class="widget">
+                <div class="widget-title">Who to follow</div>
+                <div class="suggestion-item">
+                    <div class="suggestion-avatar">JS</div>
+                    <div class="suggestion-info">
+                        <div class="suggestion-name">JavaScript</div>
+                        <div class="suggestion-handle">@javascript</div>
+                    </div>
+                    <button class="follow-btn">Follow</button>
+                </div>
+                <div class="suggestion-item">
+                    <div class="suggestion-avatar">FB</div>
+                    <div class="suggestion-info">
+                        <div class="suggestion-name">Firebase</div>
+                        <div class="suggestion-handle">@firebase</div>
+                    </div>
+                    <button class="follow-btn">Follow</button>
+                </div>
+                <div class="suggestion-item">
+                    <div class="suggestion-avatar">VL</div>
+                    <div class="suggestion-info">
+                        <div class="suggestion-name">Vercel</div>
+                        <div class="suggestion-handle">@vercel</div>
+                    </div>
+                    <button class="follow-btn">Follow</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, increment } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCd0TIh01C1-7QrhsAP6eXlhIa8FqqgpkQ",
+            projectId: "threads-website-f00e5",
+            storageBucket: "threads-website-f00e5.firebasestorage.app",
+            appId: "1:68771954012:android:f5620bff494f14a1ae5599"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        // DOM Elements
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const loginSection = document.getElementById('loginSection');
+        const userSection = document.getElementById('userSection');
+        const userName = document.getElementById('userName');
+        const userEmail = document.getElementById('userEmail');
+        const userAvatar = document.getElementById('userAvatar');
+        const composeArea = document.getElementById('composeArea');
+        const composeText = document.getElementById('composeText');
+        const composeAvatar = document.getElementById('composeAvatar');
+        const postBtn = document.getElementById('postBtn');
+        const feed = document.getElementById('feed');
+        const messages = document.getElementById('messages');
+
+        let currentUser = null;
+        let unsubscribePosts = null;
+
+        // Utility Functions
+        function showMessage(text, type = 'success') {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = text;
+            messages.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+
+        function getInitials(name) {
+            return name.split(' ').map(n => n[0]).join('').toUpperCase();
+        }
+
+        function formatTimestamp(timestamp) {
+            if (!timestamp) return 'now';
+            
+            const now = new Date();
+            const postTime = timestamp.toDate();
+            const diffMs = now - postTime;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+
+            if (diffMins < 1) return 'now';
+            if (diffMins < 60) return `${diffMins}m`;
+            if (diffHours < 24) return `${diffHours}h`;
+            return `${diffDays}d`;
+        }
+
+        // Authentication Functions
+        async function signInWithGoogle() {
+            try {
+                await signInWithPopup(auth, provider);
+                showMessage('Successfully signed in!');
+            } catch (error) {
+                console.error('Sign in error:', error);
+                showMessage('Failed to sign in. Please try again.', 'error');
+            }
+        }
+
+        async function signOutUser() {
+            try {
+                await signOut(auth);
+                showMessage('Successfully signed out!');
+            } catch (error) {
+                console.error('Sign out error:', error);
+                showMessage('Failed to sign out.', 'error');
+            }
+        }
+
+        // Post Functions
+        async function createPost(content) {
+            if (!currentUser) {
+                showMessage('Please sign in to post.', 'error');
+                return;
+            }
+
+            try {
+                postBtn.disabled = true;
+                postBtn.textContent = 'Posting...';
+
+                await addDoc(collection(db, 'posts'), {
+                    content: content,
+                    authorId: currentUser.uid,
+                    authorName: currentUser.displayName,
+                    authorEmail: currentUser.email,
+                    timestamp: serverTimestamp(),
+                    likes: 0,
+                    reposts: 0,
+                    replies: 0,
+                    likedBy: []
+                });
+
+                composeText.value = '';
+                postBtn.disabled = true;
+                postBtn.textContent = 'Post';
+                showMessage('Post created successfully!');
+            } catch (error) {
+                console.error('Error creating post:', error);
+                showMessage('Failed to create post.', 'error');
+                postBtn.disabled = false;
+                postBtn.textContent = 'Post';
+            }
+        }
+
+        async function toggleLike(postId, currentLikes, likedBy) {
+            if (!currentUser) {
+                showMessage('Please sign in to like posts.', 'error');
+                return;
+            }
+
+            try {
+                const postRef = doc(db, 'posts', postId);
+                const userLiked = likedBy.includes(currentUser.uid);
+                
+                if (userLiked) {
+                    await updateDoc(postRef, {
+                        likes: increment(-1),
+                        likedBy: likedBy.filter(uid => uid !== currentUser.uid)
+                    });
+                } else {
+                    await updateDoc(postRef, {
+                        likes: increment(1),
+                        likedBy: [...likedBy, currentUser.uid]
+                    });
+                }
+            } catch (error) {
+                console.error('Error toggling like:', error);
+                showMessage('Failed to update like.', 'error');
+            }
+        }
+
+        // UI Functions
+        function updateAuthUI(user) {
+            if (user) {
+                currentUser = user;
+                loginSection.style.display = 'none';
+                userSection.style.display = 'block';
+                composeArea.style.display = 'block';
+                
+                userName.textContent = user.displayName || 'User';
+                userEmail.textContent = user.email;
+                
+                const initials = getInitials(user.displayName || 'User');
+                userAvatar.textContent = initials;
+                composeAvatar.textContent = initials;
+                
+                loadPosts();
+            } else {
+                currentUser = null;
+                loginSection.style.display = 'block';
+                userSection.style.display = 'none';
+                composeArea.style.display = 'none';
+                
+                if (unsubscribePosts) {
+                    unsubscribePosts();
+                    unsubscribePosts = null;
+                }
+                
+                feed.innerHTML = '<div class="loading">Please sign in to view posts.</div>';
+            }
+        }
+
+        function createPostElement(post) {
+            const postDiv = document.createElement('div');
+            postDiv.className = 'post';
+            
+            const authorInitials = getInitials(post.authorName || 'User');
+            const isLiked = currentUser && post.likedBy && post.likedBy.includes(currentUser.uid);
+            
+            postDiv.innerHTML = `
+                <div class="post-header">
+                    <div class="avatar">${authorInitials}</div>
+                    <div class="post-content">
+                        <div class="post-meta">
+                            <span class="username">${post.authorName || 'Anonymous'}</span>
+                            <span class="handle">@${(post.authorEmail || '').split('@')[0]}</span>
+                            <span class="timestamp">· ${formatTimestamp(post.timestamp)}</span>
+                        </div>
+                        <div class="post-text">${post.content}</div>
+                        <div class="post-actions">
+                            <button class="action-btn reply-btn">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M14,6V2H10V6H14M20,16A2,2 0 0,1 18,18H4.5L1,21.5L1.5,22H18A2,2 0 0,1 20,20V16M18,14A2,2 0 0,1 20,16V20A2,2 0 0,1 18,22H1.5L1,21.5L4.5,18H18A2,2 0 0,1 18,14Z"/>
+                                </svg>
+                                <span>${post.replies || 0}</span>
+                            </button>
+                            <button class="action-btn repost-btn">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M6,5.75L10.25,10H7V16H13.5L15.5,18H7A2,2 0 0,1 5,16V10H1.75L6,5.75M18,18.25L13.75,14H17V8H10.5L8.5,6H17A2,2 0 0,1 19,8V14H22.25L18,18.25Z"/>
+                                </svg>
+                                <span>${post.reposts || 0}</span>
+                            </button>
+                            <button class="action-btn like-btn ${isLiked ? 'liked' : ''}" data-post-id="${post.id}" data-liked-by='${JSON.stringify(post.likedBy || [])}'>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5 2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.04L12,21.35Z"/>
+                                </svg>
+                                <span class="like-count">${post.likes || 0}</span>
+                            </button>
+                            <button class="action-btn share-btn">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M21,12L14,5V9C7,10 4,15 3,20C5.5,16.5 9,14.9 14,14.9V19L21,12Z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return postDiv;
+        }
+
+        function loadPosts() {
+            if (!currentUser) return;
+            
+            feed.innerHTML = '<div class="loading">Loading posts...</div>';
+            
+            const q = query(collection(db, 'posts'), orderBy('timestamp', 'desc'));
+            
+            unsubscribePosts = onSnapshot(q, (querySnapshot) => {
+                feed.innerHTML = '';
+                
+                if (querySnapshot.empty) {
+                    feed.innerHTML = '<div class="loading">No posts yet. Be the first to post!</div>';
+                    return;
+                }
+                
+                querySnapshot.forEach((doc) => {
+                    const post = { id: doc.id, ...doc.data() };
+                    const postElement = createPostElement(post);
+                    feed.appendChild(postElement);
+                });
+            }, (error) => {
+                console.error('Error loading posts:', error);
+                feed.innerHTML = '<div class="loading">Failed to load posts.</div>';
+                showMessage('Failed to load posts.', 'error');
+            });
+        }
+
+        // Event Listeners
+        loginBtn.addEventListener('click', signInWithGoogle);
+        logoutBtn.addEventListener('click', signOutUser);
+
+        composeText.addEventListener('input', function() {
+            const hasContent = this.value.trim().length > 0;
+            postBtn.disabled = !hasContent || !currentUser;
+            
+            if (hasContent && currentUser) {
+                postBtn.classList.add('active');
+            } else {
+                postBtn.classList.remove('active');
+            }
+        });
+
+        postBtn.addEventListener('click', function() {
+            const content = composeText.value.trim();
+            if (content && currentUser) {
+                createPost(content);
+            }
+        });
+
+        // Handle like button clicks
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.like-btn')) {
+                const likeBtn = e.target.closest('.like-btn');
+                const postId = likeBtn.dataset.postId;
+                const likedBy = JSON.parse(likeBtn.dataset.likedBy || '[]');
+                const currentLikes = parseInt(likeBtn.querySelector('.like-count').textContent);
+                
+                toggleLike(postId, currentLikes, likedBy);
+            }
+        });
+
+        // Handle follow button clicks
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('follow-btn')) {
+                const btn = e.target;
+                if (btn.textContent === 'Follow') {
+                    btn.textContent = 'Following';
+                    btn.style.backgroundColor = '#4ecdc4';
+                    btn.style.borderColor = '#4ecdc4';
+                } else {
+                    btn.textContent = 'Follow';
+                    btn.style.backgroundColor = 'transparent';
+                    btn.style.borderColor = '#666';
+                }
+            }
+        });
+
+        // Auth state observer
+        onAuthStateChanged(auth, updateAuthUI);
+
+        console.log('Firebase initialized successfully!');
+    </script>
+</body>
+</html>
