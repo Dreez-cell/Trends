@@ -1837,7 +1837,36 @@
         window.getTimeAgo = getTimeAgo;
         window.startRealtimeNotifications = startRealtimeNotifications;
         window.showRealtimeNotification = showRealtimeNotification;
+async function createPost() {
+    const user = auth.currentUser;
+    if (!user) return;
 
+    const content = document.getElementById('composeInput').value.trim();
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+
+    let fileURL = null;
+    if (file) {
+        const fileRef = ref(storage, `posts/${user.uid}/${Date.now()}_${file.name}`);
+        await uploadBytes(fileRef, file);
+        fileURL = await getDownloadURL(fileRef);
+    }
+
+    const postRef = await addDoc(collection(db, 'posts'), {
+        userId: user.uid,
+        userName: user.displayName || 'Anonymous',
+        content: content,
+        fileURL: fileURL,
+        createdAt: serverTimestamp(),
+        likes: [],
+        comments: []
+    });
+
+    console.log("Post created with ID: ", postRef.id);
+    document.getElementById('composeInput').value = '';
+    fileInput.value = '';
+    loadPosts(); // reload to show new post
+}
         // Initialize with sample posts
         loadSamplePosts();
     </script>
