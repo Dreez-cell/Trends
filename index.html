@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Redirect Complete</title>
+</head>
+<body style="background-color: #000; color: #fff; font-family: Arial;">
+  <h2>Login Successful</h2>
+  <p>Authorization code received. You can now close this page.</p>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    console.log("Authorization code:", code);
+    // Store or send this code to your app if needed
+  </script>
+</body>
+</html>
