@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Threads UI</title>
+  <title>Testagram</title>
 
   <!-- ExoClick Scripts -->
   <script async src="https://a.magsrv.com/ad-provider.js"></script>
@@ -60,7 +60,8 @@
       padding: 16px;
     }
 
-    .thread-box, .ad-box {
+    .thread-box,
+    .ad-box {
       background-color: #2a2a2a;
       border-radius: 12px;
       padding: 10px 16px;
@@ -69,9 +70,16 @@
       text-align: center;
     }
 
-    iframe {
+    .ad-box iframe,
+    .ad-box ins {
       display: block;
+      max-width: 100%;
       margin: 0 auto;
+      height: auto;
+    }
+
+    #disqus_thread {
+      padding: 8px 0;
     }
 
     a {
@@ -91,16 +99,39 @@
 
 <body>
   <div class="container">
-    <header>Threads</header>
+    <header>Testagram</header>
     <main>
-      <!-- HighPerformance Ad 1 (centered) -->
+      <!-- HighPerformance Ad -->
       <div class="ad-box">
         <div id="hp-ad-top"></div>
+        <script type="text/javascript">
+          atOptions = {
+            'key': '18d0d482298d34bd3713b4a42c4121c6',
+            'format': 'iframe',
+            'height': 250,
+            'width': 300,
+            'params': {}
+          };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/18d0d482298d34bd3713b4a42c4121c6/invoke.js"></script>
       </div>
 
       <!-- ExoClick Ad 1 -->
       <div class="ad-box">
-        <ins class="eas6a97888e37" data-zoneid="5207058"></ins>
+        <ins class="eas6a97888e37" data-zoneid="5207058" style="display:block;width:100%;max-width:300px;"></ins>
+        <script>
+          (AdProvider = window.AdProvider || []).push({ "serve": {} });
+        </script>
+      </div>
+
+      <!-- Embedded External Link -->
+      <div class="thread-box">
+        <iframe src="https://dreez-cell.github.io/Trends/" width="100%" height="500" style="border:none;border-radius:10px;"></iframe>
+      </div>
+
+      <!-- ExoClick Ad 2 -->
+      <div class="ad-box">
+        <ins class="eas6a97888e33" data-zoneid="5124374" style="display:block;width:100%;max-width:300px;"></ins>
         <script>
           (AdProvider = window.AdProvider || []).push({ "serve": {} });
         </script>
@@ -109,19 +140,6 @@
       <!-- Disqus Thread -->
       <div class="thread-box">
         <div id="disqus_thread"></div>
-      </div>
-
-      <!-- ExoClick Ad 2 -->
-      <div class="ad-box">
-        <ins class="eas6a97888e33" data-zoneid="5124374"></ins>
-        <script>
-          (AdProvider = window.AdProvider || []).push({ "serve": {} });
-        </script>
-      </div>
-
-      <!-- HighPerformance Ad 2 (centered) -->
-      <div class="ad-box">
-        <div id="hp-ad-bottom"></div>
       </div>
 
       <!-- Disqus Recommendations -->
@@ -154,19 +172,6 @@
       s.setAttribute('data-timestamp', +new Date());
       (d.head || d.body).appendChild(s);
     })();
-  </script>
-
-  <!-- Inline HighPerformance Ads -->
-  <script type="text/javascript">
-    function loadHighPerformanceAds() {
-      var top = document.getElementById("hp-ad-top");
-      var bottom = document.getElementById("hp-ad-bottom");
-
-      top.innerHTML = '<iframe src="//www.highperformanceformat.com/18d0d482298d34bd3713b4a42c4121c6/invoke.js" width="300" height="250" frameborder="0" scrolling="no"></iframe>';
-      bottom.innerHTML = '<iframe src="//www.highperformanceformat.com/18d0d482298d34bd3713b4a42c4121c6/invoke.js" width="300" height="250" frameborder="0" scrolling="no"></iframe>';
-    }
-
-    window.onload = loadHighPerformanceAds;
   </script>
 
   <noscript>
