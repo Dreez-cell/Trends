@@ -9,8 +9,6 @@
   <script async src="https://a.magsrv.com/ad-provider.js"></script>
   <script async src="https://a.pemsrv.com/ad-provider.js"></script>
 
-  <!-- HighPerformanceFormat Ad Config (Delayed loading below in body) -->
-
   <style>
     * {
       box-sizing: border-box;
@@ -71,8 +69,9 @@
       text-align: center;
     }
 
-    #disqus_thread {
-      padding: 8px 0;
+    iframe {
+      display: block;
+      margin: 0 auto;
     }
 
     a {
@@ -94,7 +93,7 @@
   <div class="container">
     <header>Threads</header>
     <main>
-      <!-- Ad 1 (HighPerformanceFormat) -->
+      <!-- HighPerformance Ad 1 (centered) -->
       <div class="ad-box">
         <div id="hp-ad-top"></div>
       </div>
@@ -120,7 +119,7 @@
         </script>
       </div>
 
-      <!-- Ad 2 (HighPerformanceFormat) -->
+      <!-- HighPerformance Ad 2 (centered) -->
       <div class="ad-box">
         <div id="hp-ad-bottom"></div>
       </div>
@@ -157,17 +156,18 @@
     })();
   </script>
 
-  <!-- HighPerformanceFormat Ads -->
+  <!-- Inline HighPerformance Ads -->
   <script type="text/javascript">
-    atOptions = {
-      'key': '18d0d482298d34bd3713b4a42c4121c6',
-      'format': 'iframe',
-      'height': 250,
-      'width': 300,
-      'params': {}
-    };
+    function loadHighPerformanceAds() {
+      var top = document.getElementById("hp-ad-top");
+      var bottom = document.getElementById("hp-ad-bottom");
+
+      top.innerHTML = '<iframe src="//www.highperformanceformat.com/18d0d482298d34bd3713b4a42c4121c6/invoke.js" width="300" height="250" frameborder="0" scrolling="no"></iframe>';
+      bottom.innerHTML = '<iframe src="//www.highperformanceformat.com/18d0d482298d34bd3713b4a42c4121c6/invoke.js" width="300" height="250" frameborder="0" scrolling="no"></iframe>';
+    }
+
+    window.onload = loadHighPerformanceAds;
   </script>
-  <script type="text/javascript" src="//www.highperformanceformat.com/18d0d482298d34bd3713b4a42c4121c6/invoke.js"></script>
 
   <noscript>
     Please enable JavaScript to view the
