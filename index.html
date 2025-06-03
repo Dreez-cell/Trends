@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script> 
- <ins class="eas6a97888e37" data-zoneid="5207058"></ins> 
- <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script><script async type="application/javascript" src="https://a.pemsrv.com/ad-provider.js"></script> 
- <ins class="eas6a97888e33" data-zoneid="5124374"></ins> 
- <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Threads UI</title>
+
+  <!-- ExoClick Ads -->
+  <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
+  <script async type="application/javascript" src="https://a.pemsrv.com/ad-provider.js"></script>
+
   <style>
     * {
       box-sizing: border-box;
@@ -67,6 +68,14 @@
       margin-bottom: 24px;
     }
 
+    .ad-box {
+      background-color: #2a2a2a;
+      padding: 10px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
     #disqus_thread {
       background-color: #2a2a2a;
       border-radius: 12px;
@@ -95,19 +104,38 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <header>Threads</header>
     <main>
+
+      <!-- ExoClick Ad 1 -->
+      <div class="ad-box">
+        <ins class="eas6a97888e37" data-zoneid="5207058"></ins>
+        <script>
+          (AdProvider = window.AdProvider || []).push({ "serve": {} });
+        </script>
+      </div>
+
       <!-- Disqus Thread -->
       <div class="thread-box">
         <div id="disqus_thread"></div>
+      </div>
+
+      <!-- ExoClick Ad 2 -->
+      <div class="ad-box">
+        <ins class="eas6a97888e33" data-zoneid="5124374"></ins>
+        <script>
+          (AdProvider = window.AdProvider || []).push({ "serve": {} });
+        </script>
       </div>
 
       <!-- Disqus Recommendations -->
       <div class="thread-box">
         <div id="disqus_recommendations"></div>
       </div>
+
     </main>
   </div>
 
@@ -138,9 +166,7 @@
 
   <noscript>
     Please enable JavaScript to view the
-    <a href="https://celebrity-gossip-3.disqus.com/embed.js" rel="nofollow">
-      comments powered by Disqus.
-    </a>
+    <a href="https://celebrity-gossip-3.disqus.com/embed.js" rel="nofollow">comments powered by Disqus.</a>
   </noscript>
 </body>
 </html>
