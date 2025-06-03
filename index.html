@@ -1,271 +1,180 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Testagram - Celebrity & News Stories</title>
-
-<meta name="6a97888e-site-verification" content="a7a7bfe0db9fd4d184bc3b5f18c5766d">
-<meta name="google-adsense-account" content="ca-pub-6967873714106764">
-
-<!-- ExoClick & Google Ads -->
-<script async src="https://a.magsrv.com/ad-provider.js"></script> 
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6967873714106764" crossorigin="anonymous"></script>
-
-<style>
-  * {
-    box-sizing: border-box;
-    margin: 0; padding: 0;
-  }
-  body {
-    background-color: #000;
-    color: #fff;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  }
-  .container {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background-color: #000;
-  }
-  header {
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 20px;
-    border-bottom: 1px solid #2a2a2a;
-    background-color: #000;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-  main {
-    flex: 1;
-    padding: 8px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  /* STORIES CAROUSEL */
-  #stories-carousel {
-    display: flex;
-    overflow-x: auto;
-    gap: 12px;
-    padding: 12px 0;
-    scroll-behavior: smooth;
-  }
-  #stories-carousel::-webkit-scrollbar {
-    display: none; /* Hide scrollbar */
-  }
-
-  #stories-carousel a {
-    display: flex;
-    flex-direction: column;
-    width: 140px;
-    flex-shrink: 0;
-    text-decoration: none;
-    color: white;
-    background-color: #111;
-    border-radius: 6px;
-    padding: 6px;
-    transition: background-color 0.3s;
-  }
-  #stories-carousel a:hover {
-    background-color: #222;
-  }
-  #stories-carousel img {
-    width: 100%;
-    height: 90px;
-    object-fit: cover;
-    border-radius: 6px;
-  }
-  #stories-carousel .story-title {
-    font-weight: bold;
-    font-size: 12px;
-    margin: 6px 0 4px 0;
-    line-height: 1.2;
-  }
-  #stories-carousel .story-summary {
-    font-size: 10px;
-    line-height: 1.3;
-    color: #ccc;
-  }
-
-  /* THREADS & ADS */
-  .thread-box, .ad-box {
-    background-color: #1a1a1a;
-    border-radius: 0;
-    padding: 12px;
-    border-bottom: 1px solid #333;
-    width: 100%;
-  }
-  iframe {
-    width: 100%;
-    height: 500px;
-    border: none;
-  }
-  .ad-box iframe, .ad-box ins {
-    display: block;
-    margin: 0 auto;
-    max-width: 100%;
-  }
-  #disqus_thread, #disqus_recommendations {
-    padding-top: 8px;
-  }
-  a {
-    color: #fff;
-  }
-  a:hover {
-    text-decoration: underline;
-  }
-</style>
-</head>
-<body>
-  <div class="container">
-    <header>Testagram</header>
-    <main>
-
-      <!-- STORIES CAROUSEL -->
-      <div id="stories-carousel" aria-label="Latest news stories from multiple sources"></div>
-
-      <!-- ADS -->
-      <div class="ad-box">
-        <div id="hp-ad-top"></div>
-        <script type="text/javascript">
-          atOptions = {
-            'key': '18d0d482298d34bd3713b4a42c4121c6',
-            'format': 'iframe',
-            'height': 250,
-            'width': 300,
-            'params': {}
-          };
-        </script>
-        <script type="text/javascript" src="//www.highperformanceformat.com/18d0d482298d34bd3713b4a42c4121c6/invoke.js"></script>
-      </div>
-
-      <div class="ad-box">
-        <ins class="eas6a97888e37" data-zoneid="5207058" style="display:block;width:100%;max-width:300px;"></ins>
-        <script>
-          (AdProvider = window.AdProvider || []).push({ "serve": {} });
-        </script>
-      </div>
-
-      <!-- THREADS -->
-      <div class="thread-box">
-        <iframe src="https://dreez-cell.github.io/Trends/"></iframe>
-      </div>
-
-      <div class="ad-box">
-        <ins class="eas6a97888e33" data-zoneid="5124374" style="display:block;width:100%;max-width:300px;"></ins>
-        <script>
-          (AdProvider = window.AdProvider || []).push({ "serve": {} });
-        </script>
-      </div>
-
-      <div class="thread-box">
-        <div id="disqus_thread"></div>
-      </div>
-
-      <div class="thread-box">
-        <div id="disqus_recommendations"></div>
-      </div>
-
-    </main>
-  </div>
-
-  <script>
-    // Your RSS sources
-    const rssFeeds = [
-      { url: 'https://capitalfm.co.ke/news/feed/', label: 'Capital FM' },
-      { url: 'https://www.tuko.co.ke/feed/', label: 'Tuko' },
-      { url: 'https://www.ghafla.com/ke/feed/', label: 'Ghafla' },
-      { url: 'https://www.standardmedia.co.ke/rss', label: 'Standard Media' },
-      { url: 'https://www.nation.co.ke/rss/news/-/1006/1306/-/index.xml', label: 'Daily Nation' },
-      { url: 'https://dailypost.ng/feed/', label: 'Daily Post' },
-      { url: 'https://www.pd.co.ke/feed/', label: 'People Daily' },
-      { url: 'https://thekenyanwallstreet.com/feed/', label: 'Kenyan Wall Street' },
-    ];
-
-    const storiesContainer = document.getElementById('stories-carousel');
-
-    // Helper: Clean HTML tags from description (simple)
-    function stripHTML(html){
-      let div = document.createElement('div');
-      div.innerHTML = html;
-      return div.textContent || div.innerText || "";
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-adsense-account" content="ca-pub-6967873714106764">
+  <title>Testagram</title>  <!-- ExoClick Scripts -->  <script async src="https://a.magsrv.com/ad-provider.js"></script>  <script async src="https://a.pemsrv.com/ad-provider.js"></script>  <style>
+    html, body {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
     }
 
-    // Fetch and render stories
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      background-color: #000;
+      color: #fff;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: bold;
+      border-bottom: 1px solid #2a2a2a;
+      background-color: #000;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .stories-carousel {
+      display: flex;
+      overflow-x: auto;
+      gap: 10px;
+      padding: 10px;
+      background: #111;
+    }
+
+    .story-item {
+      flex: 0 0 auto;
+      width: 80px;
+      height: 110px;
+      background: #222;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 12px;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .story-item img {
+      width: 100%;
+      height: 80px;
+      object-fit: cover;
+      border-bottom: 1px solid #333;
+    }
+
+    .story-title {
+      padding: 5px;
+    }
+
+    main {
+      flex: 1;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .thread-box, .ad-box {
+      background-color: #1a1a1a;
+      border-radius: 0;
+      padding: 12px;
+      border-bottom: 1px solid #333;
+      width: 100%;
+    }
+
+    iframe {
+      width: 100%;
+      height: 500px;
+      border: none;
+    }
+
+    a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style></head>
+<body>
+  <div class="container">
+    <header>Testagram</header><div class="stories-carousel" id="stories-carousel"></div>
+
+<main>
+  <div class="ad-box">
+    <ins class="eas6a97888e37" data-zoneid="5207058" style="display:block;width:100%;max-width:300px;"></ins>
+    <script>(AdProvider = window.AdProvider || []).push({ "serve": {} });</script>
+  </div>
+
+  <div class="thread-box">
+    <iframe src="https://dreez-cell.github.io/Trends/"></iframe>
+  </div>
+
+  <div class="ad-box">
+    <ins class="eas6a97888e33" data-zoneid="5124374" style="display:block;width:100%;max-width:300px;"></ins>
+    <script>(AdProvider = window.AdProvider || []).push({ "serve": {} });</script>
+  </div>
+
+  <div class="thread-box">
+    <div id="disqus_thread"></div>
+  </div>
+
+  <div class="thread-box">
+    <div id="disqus_recommendations"></div>
+  </div>
+</main>
+
+  </div>  <script>
+    const feedUrls = [
+      'https://www.capitalfm.co.ke/news/feed/',
+      'https://www.tuko.co.ke/rss/',
+      'https://www.ghafla.com/ke/feed/',
+      'https://www.standardmedia.co.ke/rss/headlines.php',
+      'https://www.nation.co.ke/rss.xml',
+      'https://www.kenyan-post.com/feeds/posts/default',
+      'https://www.pd.co.ke/feed/',
+      'https://kenyanwallstreet.com/feed/'
+    ];
+
     async function fetchAndRenderStories() {
-      storiesContainer.innerHTML = ''; // Clear existing stories
+      const carousel = document.getElementById('stories-carousel');
+      carousel.innerHTML = '';
 
-      // For each feed, fetch and show up to 5 stories
-      for (const feed of rssFeeds) {
+      for (const url of feedUrls) {
         try {
-          const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}`;
-
-          const response = await fetch(apiUrl);
-          if (!response.ok) throw new Error('Network error');
-
+          const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`);
           const data = await response.json();
 
-          if (data.status !== 'ok') throw new Error('Feed error');
-
-          data.items.slice(0, 5).forEach(item => {
+          data.items.slice(0, 3).forEach(item => {
             const story = document.createElement('a');
             story.href = item.link;
             story.target = '_blank';
-            story.rel = 'noopener noreferrer';
-            story.style.display = 'flex';
-            story.style.flexDirection = 'column';
-            story.style.width = '140px';
-            story.style.flexShrink = '0';
-            story.style.marginRight = '12px';
-            story.style.textDecoration = 'none';
-            story.style.color = 'white';
-            story.title = item.title;
+            story.className = 'story-item';
 
-            const img = document.createElement('img');
-            img.src = item.thumbnail || 'https://via.placeholder.com/140x90?text=News';
-            img.alt = item.title || 'Story thumbnail';
-            img.loading = 'lazy';
+            const imageUrl = item.thumbnail || 'https://via.placeholder.com/80';
+            story.innerHTML = `<img src="${imageUrl}" alt="thumbnail"><div class="story-title">${item.title.slice(0, 30)}</div>`;
 
-            const title = document.createElement('div');
-            title.className = 'story-title';
-            title.textContent = item.title;
-
-            const summary = document.createElement('div');
-            summary.className = 'story-summary';
-            // Use description, strip HTML, trim to ~80 chars + ellipsis
-            summary.textContent = stripHTML(item.description || '').slice(0, 80) + (item.description ? '...' : '');
-
-            story.appendChild(img);
-            story.appendChild(title);
-            story.appendChild(summary);
-
-            storiesContainer.appendChild(story);
+            carousel.appendChild(story);
           });
-
         } catch (err) {
-          console.warn(`Failed to load feed ${feed.label}:`, err);
+          console.error(`Error loading feed ${url}:`, err);
         }
       }
     }
 
-    // Initial fetch
     fetchAndRenderStories();
-
-    // Auto-refresh every 5 minutes (300000 ms)
-    setInterval(fetchAndRenderStories, 300000);
-
-  </script>
-
-  <!-- Disqus embed -->
-  <script>
+    setInterval(fetchAndRenderStories, 300000); // refresh every 5 min
+  </script>  <script>
     var disqus_config = function () {
       this.page.url = window.location.href;
       this.page.identifier = window.location.pathname;
@@ -277,21 +186,16 @@
       s.setAttribute('data-timestamp', +new Date());
       (d.head || d.body).appendChild(s);
     })();
-  </script>
 
-  <script>
     (function () {
       var d = document, s = d.createElement('script');
       s.src = 'https://celebrity-gossip-3.disqus.com/recommendations.js';
       s.setAttribute('data-timestamp', +new Date());
       (d.head || d.body).appendChild(s);
     })();
-  </script>
-
-  <noscript>
+  </script>  <noscript>
     Please enable JavaScript to view the
     <a href="https://celebrity-gossip-3.disqus.com/embed.js" rel="nofollow">comments powered by Disqus.</a>
   </noscript>
-
 </body>
 </html>
