@@ -2,18 +2,85 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Testagram</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #808080; color: #fff; font-family: sans-serif; width: 100vw; overflow-x: hidden; }
-    header { height: 56px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; background: #000; border-bottom: 1px solid #333; }
-    .story-container { display: flex; overflow-x: auto; gap: 10px; padding: 10px; }
-    .story { flex: 0 0 auto; width: 120px; height: 180px; background: #111; border-radius: 8px; text-align: center; overflow: hidden; }
-    .story img { width: 100%; height: 80px; object-fit: cover; }
-    .story p { padding: 5px; font-size: 12px; }
-    .ad-box, .thread-box { margin: 10px; background: #1a1a1a; padding: 12px; border-radius: 4px; }
-    iframe { width: 100%; height: 500px; border: none; }
+    body {
+      background: #000;
+      color: #fff;
+      font-family: sans-serif;
+      width: 100vw;
+      overflow-x: hidden;
+    }
+    header {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: bold;
+      background: #111;
+      border-bottom: 1px solid #222;
+      color: #fff;
+    }
+    .story-container {
+      display: flex;
+      overflow-x: auto;
+      gap: 10px;
+      padding: 10px;
+      background: #111;
+      border-bottom: 1px solid #222;
+    }
+    .story {
+      flex: 0 0 auto;
+      width: 120px;
+      height: 180px;
+      background: #222;
+      border-radius: 8px;
+      text-align: center;
+      overflow: hidden;
+      box-shadow: 0 0 6px rgba(255,255,255,0.1);
+      transition: transform 0.2s ease;
+    }
+    .story:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(255,255,255,0.2);
+    }
+    .story img {
+      width: 100%;
+      height: 80px;
+      object-fit: cover;
+      border-bottom: 1px solid #444;
+    }
+    .story p {
+      padding: 5px;
+      font-size: 13px;
+      color: #eee;
+      line-height: 1.2;
+      height: 90px;
+      overflow: hidden;
+    }
+    .ad-box, .thread-box {
+      margin: 10px;
+      background: #111;
+      padding: 12px;
+      border-radius: 4px;
+      box-shadow: 0 0 8px rgba(255,255,255,0.05);
+    }
+    iframe {
+      width: 100%;
+      height: 500px;
+      border: none;
+      background: #000;
+    }
+    a {
+      color: #4ea1ff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -22,7 +89,13 @@
 
   <div class="ad-box">
     <script type="text/javascript">
-      atOptions = { 'key': '18d0d482298d34bd3713b4a42c4121c6', 'format': 'iframe', 'height': 250, 'width': 300, 'params': {} };
+      atOptions = {
+        'key': '18d0d482298d34bd3713b4a42c4121c6',
+        'format': 'iframe',
+        'height': 250,
+        'width': 300,
+        'params': {}
+      };
     </script>
     <script type="text/javascript" src="//www.highperformanceformat.com/18d0d482298d34bd3713b4a42c4121c6/invoke.js"></script>
   </div>
@@ -73,7 +146,7 @@
             const img = await getMicrolinkImage(item.link, item.content || item.description);
             const div = document.createElement('div');
             div.className = 'story';
-            div.innerHTML = `<a href="${item.link}" target="_blank"><img src="${img}" alt="story"><p>${item.title}</p></a>`;
+            div.innerHTML = `<a href="${item.link}" target="_blank" rel="noopener noreferrer"><img src="${img}" alt="story"><p>${item.title}</p></a>`;
             container.appendChild(div);
           }
         } catch (err) {
