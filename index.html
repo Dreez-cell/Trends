@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Threads UI</title>
 
-  <!-- ExoClick Ads -->
-  <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
-  <script async type="application/javascript" src="https://a.pemsrv.com/ad-provider.js"></script>
+  <!-- ExoClick Scripts -->
+  <script async src="https://a.magsrv.com/ad-provider.js"></script>
+  <script async src="https://a.pemsrv.com/ad-provider.js"></script>
+
+  <!-- HighPerformanceFormat Ad Config (Delayed loading below in body) -->
 
   <style>
     * {
@@ -60,34 +62,17 @@
       padding: 16px;
     }
 
-    .thread-box {
+    .thread-box, .ad-box {
       background-color: #2a2a2a;
       border-radius: 12px;
-      padding: 8px 16px;
+      padding: 10px 16px;
       border: 1px solid #333;
-      margin-bottom: 24px;
-    }
-
-    .ad-box {
-      background-color: #2a2a2a;
-      padding: 10px;
-      border-radius: 12px;
       margin-bottom: 24px;
       text-align: center;
     }
 
     #disqus_thread {
-      background-color: #2a2a2a;
-      border-radius: 12px;
       padding: 8px 0;
-      border: 1px solid #333;
-    }
-
-    iframe[src*="disqus.com/next/config.js"],
-    .dsq-brlink,
-    a[href*="disqus.com"] {
-      display: none !important;
-      color: white !important;
     }
 
     a {
@@ -109,6 +94,10 @@
   <div class="container">
     <header>Threads</header>
     <main>
+      <!-- Ad 1 (HighPerformanceFormat) -->
+      <div class="ad-box">
+        <div id="hp-ad-top"></div>
+      </div>
 
       <!-- ExoClick Ad 1 -->
       <div class="ad-box">
@@ -131,15 +120,19 @@
         </script>
       </div>
 
+      <!-- Ad 2 (HighPerformanceFormat) -->
+      <div class="ad-box">
+        <div id="hp-ad-bottom"></div>
+      </div>
+
       <!-- Disqus Recommendations -->
       <div class="thread-box">
         <div id="disqus_recommendations"></div>
       </div>
-
     </main>
   </div>
 
-  <!-- Disqus Embed Script -->
+  <!-- Disqus Embed -->
   <script>
     var disqus_config = function () {
       this.page.url = window.location.href;
@@ -154,7 +147,7 @@
     })();
   </script>
 
-  <!-- Disqus Recommendations Script -->
+  <!-- Disqus Recommendations -->
   <script>
     (function () {
       var d = document, s = d.createElement('script');
@@ -163,6 +156,18 @@
       (d.head || d.body).appendChild(s);
     })();
   </script>
+
+  <!-- HighPerformanceFormat Ads -->
+  <script type="text/javascript">
+    atOptions = {
+      'key': '18d0d482298d34bd3713b4a42c4121c6',
+      'format': 'iframe',
+      'height': 250,
+      'width': 300,
+      'params': {}
+    };
+  </script>
+  <script type="text/javascript" src="//www.highperformanceformat.com/18d0d482298d34bd3713b4a42c4121c6/invoke.js"></script>
 
   <noscript>
     Please enable JavaScript to view the
