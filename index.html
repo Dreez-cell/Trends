@@ -1,11 +1,12 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Testagram</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #000; color: #fff; font-family: sans-serif; width: 100vw; overflow-x: hidden; }
+    body { background: #808080; color: #fff; font-family: sans-serif; width: 100vw; overflow-x: hidden; }
     header { height: 56px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; background: #000; border-bottom: 1px solid #333; }
     .story-container { display: flex; overflow-x: auto; gap: 10px; padding: 10px; }
     .story { flex: 0 0 auto; width: 120px; height: 180px; background: #111; border-radius: 8px; text-align: center; overflow: hidden; }
@@ -17,20 +18,24 @@
 </head>
 <body>
   <header>Testagram</header>
-  <div id="stories" class="story-container"></div>  <div class="ad-box">
-    <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script> 
-    <ins class="eas6a97888e37" data-zoneid="5565364"></ins> 
-    <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
-  </div>  <div class="ad-box">
+  <div id="stories" class="story-container"></div>
+
+  <div class="ad-box">
     <script type="text/javascript">
       atOptions = { 'key': '18d0d482298d34bd3713b4a42c4121c6', 'format': 'iframe', 'height': 250, 'width': 300, 'params': {} };
     </script>
     <script type="text/javascript" src="//www.highperformanceformat.com/18d0d482298d34bd3713b4a42c4121c6/invoke.js"></script>
-  </div>  <div class="thread-box">
+  </div>
+
+  <div class="thread-box">
     <iframe src="https://dreez-cell.github.io/Trends/"></iframe>
-  </div>  <div class="thread-box">
+  </div>
+
+  <div class="thread-box">
     <div id="disqus_thread"></div>
-  </div>  <script>
+  </div>
+
+  <script>
     const feeds = [
       'https://www.capitalfm.co.ke/news/feed/',
       'https://www.standardmedia.co.ke/rss/headlines.php',
@@ -44,14 +49,14 @@
 
     async function extractImageFromHTML(html) {
       const match = html?.match(/<img[^>]+src=["']([^"']+)["']/);
-      return match ? `https://images.weserv.nl/?url=${encodeURIComponent(match[1])}` : 'https://via.placeholder.com/120x80?text=No+Image';
+      return match ? match[1] : 'https://via.placeholder.com/120x80?text=No+Image';
     }
 
     async function getMicrolinkImage(url, fallbackHTML) {
       try {
         const res = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`);
         const json = await res.json();
-        return json.data.image?.url ? `https://images.weserv.nl/?url=${encodeURIComponent(json.data.image.url)}` : await extractImageFromHTML(fallbackHTML);
+        return json.data.image?.url || await extractImageFromHTML(fallbackHTML);
       } catch {
         return await extractImageFromHTML(fallbackHTML);
       }
@@ -91,5 +96,6 @@
       s.setAttribute('data-timestamp', +new Date());
       (d.head || d.body).appendChild(s);
     })();
-  </script></body>
+  </script>
+</body>
 </html>
