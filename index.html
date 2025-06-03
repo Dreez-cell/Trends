@@ -17,6 +17,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
       background-color: #000;
       color: #fff;
+      overflow-x: hidden;
     }
 
     .container {
@@ -48,6 +49,34 @@
       gap: 16px;
     }
 
+    .feed-carousel {
+      display: flex;
+      overflow-x: auto;
+      gap: 12px;
+      padding: 12px;
+    }
+
+    .feed-item {
+      min-width: 120px;
+      background: #111;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .feed-item img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+    }
+
+    .feed-item p {
+      padding: 6px;
+      font-size: 12px;
+    }
+
     .thread-box, .ad-box {
       background-color: #1a1a1a;
       border-radius: 0;
@@ -77,27 +106,31 @@
   </style></head>
 <body>
   <div class="container">
-    <header>Testagram</header>
-    <main>
-      <div class="ad-box">
-        <script type="text/javascript">
-          atOptions = {
-            'key': '18d0d482298d34bd3713b4a42c4121c6',
-            'format': 'iframe',
-            'height': 250,
-            'width': 300,
-            'params': {}
-          };
-        </script>
-        <script type="text/javascript" src="//www.highperformanceformat.com/18d0d482298d34bd3713b4a42c4121c6/invoke.js"></script>
-      </div><div class="thread-box">
+    <header>Testagram</header><div class="feed-carousel" id="feed-container">
+  <!-- RSS feed items will be inserted here -->
+</div>
+
+<main>
+  <div class="ad-box">
+    <script type="text/javascript">
+      atOptions = {
+        'key': '18d0d482298d34bd3713b4a42c4121c6',
+        'format': 'iframe',
+        'height': 250,
+        'width': 300,
+        'params': {}
+      };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/18d0d482298d34bd3713b4a42c4121c6/invoke.js"></script>
+  </div>
+
+  <div class="thread-box">
     <iframe src="https://dreez-cell.github.io/Trends/"></iframe>
   </div>
 
-  <!-- ✅ Inserted Ad Block near Disqus -->
   <div class="ad-box">
-    <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script> 
-    <ins class="eas6a97888e37" data-zoneid="5565364"></ins> 
+    <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
+    <ins class="eas6a97888e37" data-zoneid="5565364"></ins>
     <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
   </div>
 
@@ -110,7 +143,48 @@
   </div>
 </main>
 
-  </div>  <!-- Disqus Embed -->  <script>
+  </div>  <script>
+    const rssFeeds = [
+      "https://www.tuko.co.ke/rss/",
+      "https://www.ghafla.com/ke/feed/",
+      "https://www.nation.africa/rss",
+      "https://www.pd.co.ke/feed/",
+      "https://www.kenyanwallstreet.com/feed/"
+    ];
+
+    async function fetchRSS(url) {
+      const proxy = "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(url);
+      const res = await fetch(proxy);
+      return res.json();
+    }
+
+    async function loadFeeds() {
+      const container = document.getElementById("feed-container");
+      container.innerHTML = "";
+
+      for (const url of rssFeeds) {
+        try {
+          const data = await fetchRSS(url);
+          data.items.slice(0, 3).forEach(item => {
+            const div = document.createElement("a");
+            div.className = "feed-item";
+            div.href = item.link;
+            div.target = "_blank";
+            div.innerHTML = `
+              <img src="${item.thumbnail || 'https://via.placeholder.com/120x100'}" alt="" />
+              <p>${item.title}</p>
+            `;
+            container.appendChild(div);
+          });
+        } catch (e) {
+          console.error("Feed load failed", url);
+        }
+      }
+    }
+
+    loadFeeds();
+    setInterval(loadFeeds, 300000); // Refresh every 5 minutes
+  </script>  <!-- Disqus Embed -->  <script>
     var disqus_config = function () {
       this.page.url = window.location.href;
       this.page.identifier = window.location.pathname;
