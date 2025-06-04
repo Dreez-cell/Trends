@@ -130,7 +130,6 @@ admanmedia.com, 1069, RESELLER
     <script type="text/javascript" src="//www.highperformanceformat.com/18d0d482298d34bd3713b4a42c4121c6/invoke.js"></script>
   </div>
 
-  <!-- Added MAGSrv Ad below as requested -->
   <div class="ad-box">
     <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script> 
     <ins class="eas6a97888e2" data-zoneid="5144454"></ins> 
@@ -157,7 +156,14 @@ admanmedia.com, 1069, RESELLER
       'https://www.kenyan-post.com/feeds/posts/default',
       'https://www.theeastafrican.co.ke/rss.xml',
       'https://www.tuko.co.ke/rss/all.rss',
-      'https://www.kenyans.co.ke/feeds/news'
+      'https://www.kenyans.co.ke/feeds/news',
+      'https://citizen.digital/news/rss',
+      'https://www.businessdailyafrica.com/rss',
+      'https://feeds.bbci.co.uk/news/world/africa/rss.xml',
+      'https://tech-ish.com/feed/',
+      'https://www.nation.africa/kenya/business/rss',
+      'https://nairobinews.nation.africa/rss',
+      'https://www.kbc.co.ke/feed/'
     ];
 
     async function extractImageFromHTML(html) {
@@ -214,14 +220,8 @@ admanmedia.com, 1069, RESELLER
 </html>
 
 <script type="module">
-  // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
   const firebaseConfig = {
     apiKey: "AIzaSyBWb97lOaeRDlyC7kseF5OzZvFBTAtorJQ",
     authDomain: "teatagram-a3a8f.firebaseapp.com",
@@ -231,8 +231,8 @@ admanmedia.com, 1069, RESELLER
     appId: "1:835709485105:web:f70765b17d028e6e219510",
     measurementId: "G-XF2WKT1TTE"
   };
-
-  // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
 </script>
+</body>
+</html>
