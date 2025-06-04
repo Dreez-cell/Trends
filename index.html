@@ -154,7 +154,10 @@ admanmedia.com, 1069, RESELLER
       'https://www.ghafla.com/ke/feed/',
       'https://www.nation.africa/kenya/rss',
       'https://www.pd.co.ke/feed/',
-      'https://www.kenyan-post.com/feeds/posts/default'
+      'https://www.kenyan-post.com/feeds/posts/default',
+      'https://www.theeastafrican.co.ke/rss.xml',
+      'https://www.tuko.co.ke/rss/all.rss',
+      'https://www.kenyans.co.ke/feeds/news'
     ];
 
     async function extractImageFromHTML(html) {
@@ -207,29 +210,29 @@ admanmedia.com, 1069, RESELLER
       (d.head || d.body).appendChild(s);
     })();
   </script>
-
-  <script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics.js";
-    // TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
-
-    // Your web app's Firebase configuration
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-    const firebaseConfig = {
-      apiKey: "AIzaSyBWb97lOaeRDlyC7kseF5OzZvFBTAtorJQ",
-      authDomain: "teatagram-a3a8f.firebaseapp.com",
-      projectId: "teatagram-a3a8f",
-      storageBucket: "teatagram-a3a8f.firebasestorage.app",
-      messagingSenderId: "835709485105",
-      appId: "1:835709485105:web:f70765b17d028e6e219510",
-      measurementId: "G-XF2WKT1TTE"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-  </script>
 </body>
 </html>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyBWb97lOaeRDlyC7kseF5OzZvFBTAtorJQ",
+    authDomain: "teatagram-a3a8f.firebaseapp.com",
+    projectId: "teatagram-a3a8f",
+    storageBucket: "teatagram-a3a8f.firebasestorage.app",
+    messagingSenderId: "835709485105",
+    appId: "1:835709485105:web:f70765b17d028e6e219510",
+    measurementId: "G-XF2WKT1TTE"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
