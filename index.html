@@ -1,120 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><script type="text/javascript">
-/*
-disqus.com, 4972842, DIRECT
-zetaglobal.net, 100, DIRECT
-aps.amazon.com, 31d3a4c9-a8a6-4ae0-a5ae-d3b0de43284c, RESELLER
-google.com, pub-6650322601660058, RESELLER, f08c47fec0942fa0
-minutemedia.com, 01gcrv9grwe9, RESELLER
-criteo.com, B-060574, DIRECT, 9fac4a4a87c2a44f
-sharethrough.com, 00PriK0o, RESELLER, d53b998a7bd4ecd2
-sharethrough.com, UvcAx8IL, RESELLER, d53b998a7bd4ecd2
-amxrtb.com, 105199574, RESELLER
-pubmatic.com, 158685, RESELLER, 5d62403b186f2ace
-appnexus.com, 2797, RESELLER
-smartadserver.com, 4899, RESELLER, 060d053dcf45cbf3
-rubiconproject.com, 13380, RESELLER, 0bfd66d529a55807
-rubiconproject.com, 18798, RESELLER, 0bfd66d529a55807
-madopi.media, 159857, RESELLER
-risecodes.com, 6387671b59cc19000143106f, RESELLER
-mediafuse.com, 604, RESELLER
-appnexus.com, 9538, RESELLER
-inmobi.com, 7cd970b6ef494a05b3a4d538650c5e47, RESELLER, 83e75a7ae333ca9d
-onetag.com, 5cd7fb62fac7ec9, RESELLER
-openx.com, 537133236, RESELLER, 6a698e2ec38604c6
-aniview.com, 616704c962b31624e671e171, RESELLER, 78b21b97965ec3f8
-video.unrulymedia.com, 919139201, RESELLER
-lijit.com, 279534, RESELLER, fafdf38b16bf6b2b #SOVRN
-lijit.com, 279534-eb, RESELLER, fafdf38b16bf6b2b #SOVRN
-loopme.com, 14872, RESELLER, 6c8d5f95897a5a3b
-admanmedia.com, 1069, RESELLER
-*/
-</script>
+<head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Testagram</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: #000;
-      color: #fff;
       font-family: sans-serif;
       width: 100vw;
       overflow-x: hidden;
+      transition: background 0.3s, color 0.3s;
     }
+
+    body.light {
+      background: #fff;
+      color: #000;
+    }
+
+    body.dark {
+      background: #000;
+      color: #fff;
+    }
+
     header {
       height: 56px;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
+      padding: 0 16px;
       font-size: 20px;
       font-weight: bold;
-      background: #111;
-      border-bottom: 1px solid #222;
-      color: #fff;
+      border-bottom: 1px solid;
     }
+
+    body.light header {
+      background: #f9f9f9;
+      color: #000;
+      border-color: #ccc;
+    }
+
+    body.dark header {
+      background: #111;
+      color: #fff;
+      border-color: #222;
+    }
+
+    .theme-toggle {
+      font-size: 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: inherit;
+    }
+
     .story-container {
       display: flex;
       overflow-x: auto;
       gap: 10px;
       padding: 10px;
-      background: #111;
-      border-bottom: 1px solid #222;
+      border-bottom: 1px solid;
     }
+
+    body.light .story-container {
+      background: #f2f2f2;
+      border-color: #ccc;
+    }
+
+    body.dark .story-container {
+      background: #111;
+      border-color: #222;
+    }
+
     .story {
       flex: 0 0 auto;
       width: 120px;
       height: 180px;
-      background: #222;
+      background: #ddd;
       border-radius: 8px;
       text-align: center;
       overflow: hidden;
-      box-shadow: 0 0 6px rgba(255,255,255,0.1);
+      box-shadow: 0 0 6px rgba(0,0,0,0.1);
       transition: transform 0.2s ease;
     }
+
+    body.dark .story {
+      background: #222;
+      box-shadow: 0 0 6px rgba(255,255,255,0.1);
+    }
+
     .story:hover {
       transform: scale(1.05);
-      box-shadow: 0 0 10px rgba(255,255,255,0.2);
     }
+
     .story img {
       width: 100%;
       height: 80px;
       object-fit: cover;
-      border-bottom: 1px solid #444;
+      border-bottom: 1px solid #ccc;
     }
+
+    body.dark .story img {
+      border-color: #444;
+    }
+
     .story p {
       padding: 5px;
       font-size: 13px;
-      color: #eee;
       line-height: 1.2;
       height: 90px;
       overflow: hidden;
     }
+
     .ad-box, .thread-box {
       margin: 10px;
-      background: #111;
       padding: 12px;
       border-radius: 4px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.05);
+    }
+
+    body.light .ad-box, body.light .thread-box {
+      background: #eee;
+    }
+
+    body.dark .ad-box, body.dark .thread-box {
+      background: #111;
       box-shadow: 0 0 8px rgba(255,255,255,0.05);
     }
+
     iframe {
       width: 100%;
       height: 500px;
       border: none;
-      background: #000;
+      background: inherit;
     }
+
     a {
       color: #4ea1ff;
       text-decoration: none;
     }
+
     a:hover {
       text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <header>Testagram</header>
+  <header>
+    <span>Testagram</span>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+  </header>
+
   <div id="stories" class="story-container"></div>
 
   <div class="ad-box">
@@ -207,7 +243,6 @@ admanmedia.com, 1069, RESELLER
     var disqus_config = function () {
       this.page.url = window.location.href;
       this.page.identifier = window.location.pathname;
-      this.theme = 'dark';
     };
     (function () {
       var d = document, s = d.createElement('script');
@@ -215,24 +250,45 @@ admanmedia.com, 1069, RESELLER
       s.setAttribute('data-timestamp', +new Date());
       (d.head || d.body).appendChild(s);
     })();
-  </script>
-</body>
-</html>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics.js";
-  const firebaseConfig = {
-    apiKey: "AIzaSyBWb97lOaeRDlyC7kseF5OzZvFBTAtorJQ",
-    authDomain: "teatagram-a3a8f.firebaseapp.com",
-    projectId: "teatagram-a3a8f",
-    storageBucket: "teatagram-a3a8f.firebasestorage.app",
-    messagingSenderId: "835709485105",
-    appId: "1:835709485105:web:f70765b17d028e6e219510",
-    measurementId: "G-XF2WKT1TTE"
-  };
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
+    // Theme detection and toggling
+    function applyTheme(theme) {
+      document.body.classList.remove('light', 'dark');
+      document.body.classList.add(theme);
+    }
+
+    function toggleTheme() {
+      const current = document.body.classList.contains('dark') ? 'dark' : 'light';
+      const newTheme = current === 'dark' ? 'light' : 'dark';
+      applyTheme(newTheme);
+      localStorage.setItem('theme', newTheme);
+    }
+
+    (function initializeTheme() {
+      const saved = localStorage.getItem('theme');
+      if (saved) {
+        applyTheme(saved);
+      } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        applyTheme(prefersDark ? 'dark' : 'light');
+      }
+    })();
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyBWb97lOaeRDlyC7kseF5OzZvFBTAtorJQ",
+      authDomain: "teatagram-a3a8f.firebaseapp.com",
+      projectId: "teatagram-a3a8f",
+      storageBucket: "teatagram-a3a8f.appspot.com",
+      messagingSenderId: "835709485105",
+      appId: "1:835709485105:web:f70765b17d028e6e219510",
+      measurementId: "G-XF2WKT1TTE"
+    };
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  </script>
 </body>
 </html>
