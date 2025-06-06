@@ -7,7 +7,10 @@
   <meta name="google-adsense-account" content="ca-pub-6967873714106764" />
   <title>Testagram</title>
 
+  <!-- AMP Auto Ads -->
   <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js"></script>
+
+  <!-- Google Adsense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6967873714106764" crossorigin="anonymous"></script>
 
   <style>
@@ -18,17 +21,8 @@
       overflow-x: hidden;
       transition: background 0.3s, color 0.3s;
     }
-
-    body.light {
-      background: #fff;
-      color: #000;
-    }
-
-    body.dark {
-      background: #000;
-      color: #fff;
-    }
-
+    body.light { background: #fff; color: #000; }
+    body.dark { background: #000; color: #fff; }
     header {
       height: 56px;
       display: flex;
@@ -39,19 +33,16 @@
       font-weight: bold;
       border-bottom: 1px solid;
     }
-
     body.light header {
       background: #f9f9f9;
       color: #000;
       border-color: #ccc;
     }
-
     body.dark header {
       background: #111;
       color: #fff;
       border-color: #222;
     }
-
     .theme-toggle {
       font-size: 20px;
       background: none;
@@ -59,7 +50,6 @@
       cursor: pointer;
       color: inherit;
     }
-
     .story-container {
       display: flex;
       overflow-x: auto;
@@ -67,17 +57,14 @@
       padding: 10px;
       border-bottom: 1px solid;
     }
-
     body.light .story-container {
       background: #f2f2f2;
       border-color: #ccc;
     }
-
     body.dark .story-container {
       background: #111;
       border-color: #222;
     }
-
     .story {
       flex: 0 0 auto;
       width: 120px;
@@ -89,27 +76,18 @@
       box-shadow: 0 0 6px rgba(0,0,0,0.1);
       transition: transform 0.2s ease;
     }
-
     body.dark .story {
       background: #222;
       box-shadow: 0 0 6px rgba(255,255,255,0.1);
     }
-
-    .story:hover {
-      transform: scale(1.05);
-    }
-
+    .story:hover { transform: scale(1.05); }
     .story img {
       width: 100%;
       height: 80px;
       object-fit: cover;
       border-bottom: 1px solid #ccc;
     }
-
-    body.dark .story img {
-      border-color: #444;
-    }
-
+    body.dark .story img { border-color: #444; }
     .story p {
       padding: 5px;
       font-size: 13px;
@@ -117,41 +95,37 @@
       height: 90px;
       overflow: hidden;
     }
-
     .ad-box, .thread-box {
       margin: 10px;
       padding: 12px;
       border-radius: 4px;
       box-shadow: 0 0 8px rgba(0,0,0,0.05);
     }
-
     body.light .ad-box, body.light .thread-box {
       background: #eee;
     }
-
     body.dark .ad-box, body.dark .thread-box {
       background: #111;
       box-shadow: 0 0 8px rgba(255,255,255,0.05);
     }
-
     iframe {
       width: 100%;
       height: 500px;
       border: none;
       background: inherit;
     }
-
     a {
       color: #4ea1ff;
       text-decoration: none;
     }
-
     a:hover {
       text-decoration: underline;
     }
   </style>
 </head>
 <body>
+
+  <!-- AMP Auto Ads -->
   <amp-auto-ads type="adsense" data-ad-client="ca-pub-6967873714106764"></amp-auto-ads>
 
   <header>
@@ -159,9 +133,10 @@
     <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
   </header>
 
+  <!-- General News Stories -->
   <div id="stories" class="story-container"></div>
 
-  <!-- Custom Ad Block #1 -->
+  <!-- HighPerformanceFormat Ad -->
   <div class="ad-box" style="max-width: 300px; margin: 20px auto; text-align:center;">
     <script type="text/javascript">
       atOptions = {
@@ -175,25 +150,29 @@
     <script type="text/javascript" src="//www.highperformanceformat.com/18d0d482298d34bd3713b4a42c4121c6/invoke.js"></script>
   </div>
 
-  <!-- Custom Ad Block #2 -->
+  <!-- Profitablerate CPM Ad -->
   <div class="ad-box" style="max-width: 300px; margin: 20px auto; text-align:center;">
     <script type='text/javascript' src='//pl22779142.profitableratecpm.com/17/39/90/173990df9793db05ffad154cf2782fd5.js'></script>
   </div>
 
+  <!-- Hip Hop Stories -->
+  <div id="hiphop-carousel" class="story-container"></div>
+
+  <!-- Sports Magazine Slider Section -->
+  <div id="rss-magazine" class="story-container"></div>
+
+  <!-- Embedded Trends iframe -->
   <div class="thread-box">
     <iframe src="https://dreez-cell.github.io/Trends/"></iframe>
   </div>
 
+  <!-- Disqus Comments Section -->
   <div class="thread-box">
     <div id="disqus_thread"></div>
   </div>
 
-  <noscript>
-    Please enable JavaScript to view the
-    <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
-  </noscript>
-
   <script>
+    // RSS Feeds URLs
     const feeds = [
       'https://www.capitalfm.co.ke/news/feed/',
       'https://www.standardmedia.co.ke/rss/headlines.php',
@@ -215,11 +194,46 @@
       'https://www.kbc.co.ke/feed/'
     ];
 
+    const hiphopFeeds = [
+      'https://allhiphop.com/feed/',
+      'https://www.xxlmag.com/feed/',
+      'https://hiphopwired.com/feed/',
+      'https://hiphop-n-more.com/feed/',
+      'https://undergroundhiphopblog.com/feed/',
+      'https://thesource.com/feed/',
+      'https://ambrosiaforheads.com/feed/',
+      'https://rapindustry.com/feed/',
+      'https://dilemaradio.com/feed/',
+      'https://spiceonthebeat.com/feed/',
+      'https://uproxx.com/music/feed/',
+      'https://www.okayplayer.com/feed',
+      'https://hiphopvibe.com/feed/',
+      'https://djbooth.net/rss/all',
+      'https://rapzilla.com/feed/',
+      'https://hiphopgoldenage.com/feed/',
+      'https://rapradar.com/feed/',
+      'https://respectmyregion.com/feed/',
+      'https://siccness.net/rss.xml'
+    ];
+
+    const sportsFeeds = [
+      'https://www.espn.com/espn/rss/news',
+      'https://feeds.bbci.co.uk/sport/rss.xml?edition=uk',
+      'https://www.skysports.com/rss/12040',
+      'https://www.nba.com/rss/nba_rss.xml',
+      'https://www.nfl.com/rss/rsslanding?searchString=home',
+      'https://www.goal.com/feeds/en/news/africa/1',
+      'https://www.cafonline.com/rss',
+      'https://www.supersport.com/rss'
+    ];
+
+    // Extract image from HTML string fallback
     async function extractImageFromHTML(html) {
       const match = html?.match(/<img[^>]+src=["']([^"']+)["']/);
       return match ? match[1] : 'https://via.placeholder.com/120x80?text=No+Image';
     }
 
+    // Get image using Microlink API fallback to HTML content
     async function getMicrolinkImage(url, fallbackHTML) {
       try {
         const res = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`);
@@ -230,6 +244,7 @@
       }
     }
 
+    // Load general stories
     async function loadStories() {
       const container = document.getElementById('stories');
       container.innerHTML = '';
@@ -250,10 +265,59 @@
       }
     }
 
-    loadStories();
-    setInterval(loadStories, 300000); // refresh every 5 minutes
+    // Load hip hop stories
+    async function loadHipHopStories() {
+      const container = document.getElementById('hiphop-carousel');
+      container.innerHTML = '';
+      for (const feed of hiphopFeeds) {
+        try {
+          const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed)}`);
+          const data = await res.json();
+          for (let item of data.items.slice(0, 3)) {
+            const img = await getMicrolinkImage(item.link, item.content || item.description);
+            const div = document.createElement('div');
+            div.className = 'story';
+            div.innerHTML = `<a href="${item.link}" target="_blank" rel="noopener noreferrer"><img src="${img}" alt="hiphop"><p>${item.title}</p></a>`;
+            container.appendChild(div);
+          }
+        } catch (err) {
+          console.error('HipHop Feed error:', feed, err);
+        }
+      }
+    }
 
-    // Disqus config and embed script
+    // Load sports magazine slider stories
+    async function loadMagazineStories() {
+      const container = document.getElementById('rss-magazine');
+      container.innerHTML = '';
+      for (const feed of sportsFeeds) {
+        try {
+          const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed)}`);
+          const data = await res.json();
+          for (let item of data.items.slice(0, 2)) {
+            const img = await getMicrolinkImage(item.link, item.content || item.description);
+            const div = document.createElement('div');
+            div.className = 'story';
+            div.innerHTML = `<a href="${item.link}" target="_blank" rel="noopener noreferrer"><img src="${img}" alt="sports"><p>${item.title}</p></a>`;
+            container.appendChild(div);
+          }
+        } catch (err) {
+          console.error('Sports Feed error:', feed, err);
+        }
+      }
+    }
+
+    // Initial load & intervals
+    loadStories();
+    setInterval(loadStories, 300000); // every 5 minutes
+
+    loadHipHopStories();
+    setInterval(loadHipHopStories, 180000); // every 3 minutes
+
+    loadMagazineStories();
+    setInterval(loadMagazineStories, 240000); // every 4 minutes
+
+    // Disqus configuration
     var disqus_config = function () {
       this.page.url = window.location.href;
       this.page.identifier = window.location.pathname;
@@ -266,10 +330,12 @@
       (d.head || d.body).appendChild(s);
     })();
 
-    // Theme toggle functions
+    // Theme management functions
     function applyTheme(theme) {
       document.body.classList.remove('light', 'dark');
       document.body.classList.add(theme);
+      const btn = document.querySelector('.theme-toggle');
+      btn.textContent = theme === 'dark' ? '☀️' : '🌙';
     }
 
     function toggleTheme() {
@@ -279,33 +345,14 @@
       localStorage.setItem('theme', newTheme);
     }
 
+    // Initialize theme on page load
     (function initializeTheme() {
       const saved = localStorage.getItem('theme');
-      if (saved) {
-        applyTheme(saved);
-      } else {
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        applyTheme(prefersDark ? 'dark' : 'light');
-      }
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const themeToApply = saved || (prefersDark ? 'dark' : 'light');
+      applyTheme(themeToApply);
     })();
   </script>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBWb97lOaeRDlyC7kseF5OzZvFBTAtorJQ",
-      authDomain: "teatagram-a3a8f.firebaseapp.com",
-      projectId: "teatagram-a3a8f",
-      storageBucket: "teatagram-a3a8f.appspot.com",
-      messagingSenderId: "835709485105",
-      appId: "1:835709485105:web:f70765b17d028e6e219510",
-      measurementId: "G-XF2WKT1TTE"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-  </script>
 </body>
 </html>
