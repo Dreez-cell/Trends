@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script async custom-element="amp-auto-ads"
-          src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js"></script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6967873714106764"
-          crossorigin="anonymous"></script>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="google-site-verification" content="5wBQcPlkGq-D7yoWyplD9c_Z7XQo_spaGc4FkSu6ejs" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="google-adsense-account" content="ca-pub-6967873714106764">
+  <meta name="google-adsense-account" content="ca-pub-6967873714106764" />
   <title>Testagram</title>
+
+  <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6967873714106764" crossorigin="anonymous"></script>
+
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -188,6 +188,11 @@
     <div id="disqus_thread"></div>
   </div>
 
+  <noscript>
+    Please enable JavaScript to view the
+    <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+  </noscript>
+
   <script>
     const feeds = [
       'https://www.capitalfm.co.ke/news/feed/',
@@ -246,12 +251,14 @@
     }
 
     loadStories();
-    setInterval(loadStories, 300000); // every 5 minutes
+    setInterval(loadStories, 300000); // refresh every 5 minutes
 
+    // Disqus config and embed script
     var disqus_config = function () {
       this.page.url = window.location.href;
       this.page.identifier = window.location.pathname;
     };
+
     (function () {
       var d = document, s = d.createElement('script');
       s.src = 'https://celebrity-gossip-3.disqus.com/embed.js';
@@ -259,6 +266,7 @@
       (d.head || d.body).appendChild(s);
     })();
 
+    // Theme toggle functions
     function applyTheme(theme) {
       document.body.classList.remove('light', 'dark');
       document.body.classList.add(theme);
@@ -285,6 +293,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyBWb97lOaeRDlyC7kseF5OzZvFBTAtorJQ",
       authDomain: "teatagram-a3a8f.firebaseapp.com",
@@ -294,6 +303,7 @@
       appId: "1:835709485105:web:f70765b17d028e6e219510",
       measurementId: "G-XF2WKT1TTE"
     };
+
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
   </script>
