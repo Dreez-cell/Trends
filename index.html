@@ -137,20 +137,29 @@
       font-weight: 700;
       letter-spacing: -.5px;
     }
-    .story-container {
+    /* --- Carousel 2-row layout --- */
+    .carousel-2row {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .carousel-2row .story-container-row {
       display: flex;
       overflow-x: auto;
       gap: 14px;
-      padding: 10px 5px;
-      border-bottom: 1px solid var(--border-light);
+      padding: 10px 5px 0 5px;
+      border-bottom: none;
       scroll-behavior: smooth;
+      min-height: 0;
     }
-    body.dark .story-container {
-      background: #222;
+    /* Remove bottom border for rows except last in carousel */
+    .carousel-2row .story-container-row:last-child {
+      border-bottom: 1px solid var(--border-light);
+    }
+    body.dark .carousel-2row .story-container-row:last-child {
       border-color: #444;
     }
-    body.light .story-container {
-      background: #f8f8f8;
+    body.light .carousel-2row .story-container-row:last-child {
       border-color: #ddd;
     }
     .story {
@@ -259,6 +268,7 @@
       .story p { font-size: 13px; height: 80px; }
       iframe { height: 320px; }
       header { font-size: 18px; height: 48px; }
+      .carousel-2row .story-container-row { gap: 10px; }
     }
   </style>
 </head>
@@ -277,7 +287,10 @@
     <!-- General News Stories -->
     <section aria-labelledby="general-news-title">
       <h2 id="general-news-title">General News</h2>
-      <div id="stories" class="story-container" aria-live="polite" aria-busy="false" role="list"></div>
+      <div id="stories-carousel" class="carousel-2row" aria-live="polite" aria-busy="false" role="region">
+        <div id="stories-row1" class="story-container-row" role="list"></div>
+        <div id="stories-row2" class="story-container-row" role="list"></div>
+      </div>
     </section>
     <!-- HighPerformanceFormat Ad -->
     <div class="ad-box" role="complementary" aria-label="Advertisement - HighPerformanceFormat">
@@ -299,12 +312,18 @@
     <!-- Hip Hop Stories -->
     <section aria-labelledby="hiphop-news-title">
       <h2 id="hiphop-news-title">Hip Hop Stories</h2>
-      <div id="hiphop-carousel" class="story-container" aria-live="polite" aria-busy="false" role="list"></div>
+      <div id="hiphop-carousel" class="carousel-2row" aria-live="polite" aria-busy="false" role="region">
+        <div id="hiphop-row1" class="story-container-row" role="list"></div>
+        <div id="hiphop-row2" class="story-container-row" role="list"></div>
+      </div>
     </section>
     <!-- Sports Magazine Slider Section -->
     <section aria-labelledby="sports-magazine-title">
       <h2 id="sports-magazine-title">Sports Magazine</h2>
-      <div id="rss-magazine" class="story-container" aria-live="polite" aria-busy="false" role="list"></div>
+      <div id="sports-carousel" class="carousel-2row" aria-live="polite" aria-busy="false" role="region">
+        <div id="sports-row1" class="story-container-row" role="list"></div>
+        <div id="sports-row2" class="story-container-row" role="list"></div>
+      </div>
     </section>
     <!-- Embedded Trends iframe -->
     <section aria-label="Trending topics iframe" style="max-width: 1200px;">
@@ -425,13 +444,17 @@
       container.setAttribute('aria-busy', 'false');
     }
 
-    // --- MAIN FEED LOADER ---
-    async function loadFeedStories(feedList, sliceCount, containerId, alt) {
-      const container = document.getElementById(containerId);
-      if (!container) return;
-      showLoading(container);
+    // --- MAIN FEED LOADER for 2-row carousels ---
+    async function loadFeedStories2Rows(feedList, sliceCount, row1Id, row2Id, alt) {
+      const row1 = document.getElementById(row1Id);
+      const row2 = document.getElementById(row2Id);
+      if (!row1 || !row2) return;
+      showLoading(row1);
+      showLoading(row2);
+      row1.innerHTML = '';
+      row2.innerHTML = '';
       let loadedAny = false;
-      container.innerHTML = '';
+      let allStories = [];
       const promises = feedList.map(async (feed) => {
         try {
           const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed)}`);
@@ -440,15 +463,11 @@
           if (!data.items || !Array.isArray(data.items)) throw new Error('Invalid RSS data');
           for (let item of data.items.slice(0, sliceCount)) {
             const img = await getMicrolinkImage(item.link, item.content || item.description, item.title);
-            const div = document.createElement('div');
-            div.className = 'story';
-            // Use article title for alt attribute for accessibility
-            div.innerHTML = `<a href="${item.link}" target="_blank" rel="noopener noreferrer">
-  <img src="${img}" alt="${item.title}">
-  <p></p>
-</a>`;
-            div.querySelector('p').textContent = item.title; // Prevent XSS from title
-            container.appendChild(div);
+            allStories.push({
+              link: item.link,
+              title: item.title,
+              img
+            });
             loadedAny = true;
           }
         } catch (err) {
@@ -456,24 +475,51 @@
         }
       });
       await Promise.all(promises);
-      if (!loadedAny) {
-        showError(container, `All ${alt} feeds failed to load.`);
-      } else if (container.children.length < feedList.length * sliceCount) {
-        showError(container, `Some ${alt} feeds failed to load.`);
+      // Distribute stories into 2 rows
+      const half = Math.ceil(allStories.length / 2);
+      const row1Stories = allStories.slice(0, half);
+      const row2Stories = allStories.slice(half);
+      for (let story of row1Stories) {
+        const div = document.createElement('div');
+        div.className = 'story';
+        div.innerHTML = `<a href="${story.link}" target="_blank" rel="noopener noreferrer">
+  <img src="${story.img}" alt="${story.title}">
+  <p></p>
+</a>`;
+        div.querySelector('p').textContent = story.title;
+        row1.appendChild(div);
       }
-      container.setAttribute('aria-busy', 'false');
+      for (let story of row2Stories) {
+        const div = document.createElement('div');
+        div.className = 'story';
+        div.innerHTML = `<a href="${story.link}" target="_blank" rel="noopener noreferrer">
+  <img src="${story.img}" alt="${story.title}">
+  <p></p>
+</a>`;
+        div.querySelector('p').textContent = story.title;
+        row2.appendChild(div);
+      }
+      if (!loadedAny) {
+        showError(row1, `All ${alt} feeds failed to load.`);
+        showError(row2, `All ${alt} feeds failed to load.`);
+      } else if (allStories.length < feedList.length * sliceCount) {
+        showError(row1, `Some ${alt} feeds failed to load.`);
+        showError(row2, `Some ${alt} feeds failed to load.`);
+      }
+      row1.setAttribute('aria-busy', 'false');
+      row2.setAttribute('aria-busy', 'false');
     }
 
     // --- LOAD & REFRESH ---
     function reloadAll() {
-      loadFeedStories(feeds, 5, 'stories', 'story');
-      loadFeedStories(hiphopFeeds, 3, 'hiphop-carousel', 'hiphop');
-      loadFeedStories(sportsFeeds, 2, 'rss-magazine', 'sports');
+      loadFeedStories2Rows(feeds, 5, 'stories-row1', 'stories-row2', 'story');
+      loadFeedStories2Rows(hiphopFeeds, 3, 'hiphop-row1', 'hiphop-row2', 'hiphop');
+      loadFeedStories2Rows(sportsFeeds, 2, 'sports-row1', 'sports-row2', 'sports');
     }
     reloadAll();
-    setInterval(() => loadFeedStories(feeds, 5, 'stories', 'story'), 300000);
-    setInterval(() => loadFeedStories(hiphopFeeds, 3, 'hiphop-carousel', 'hiphop'), 180000);
-    setInterval(() => loadFeedStories(sportsFeeds, 2, 'rss-magazine', 'sports'), 240000);
+    setInterval(() => loadFeedStories2Rows(feeds, 5, 'stories-row1', 'stories-row2', 'story'), 300000);
+    setInterval(() => loadFeedStories2Rows(hiphopFeeds, 3, 'hiphop-row1', 'hiphop-row2', 'hiphop'), 180000);
+    setInterval(() => loadFeedStories2Rows(sportsFeeds, 2, 'sports-row1', 'sports-row2', 'sports'), 240000);
 
     // --- DISQUS ---
     var disqus_config = function () {
