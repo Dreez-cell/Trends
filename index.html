@@ -367,7 +367,7 @@
       try {
         const res = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`);
         const json = await res.json();
-        return json.data.image?.url || await extractImageFromHTML(fallbackHTML);
+        return json.data?.image?.url || await extractImageFromHTML(fallbackHTML);
       } catch {
         return await extractImageFromHTML(fallbackHTML);
       }
@@ -379,87 +379,60 @@
       container.setAttribute('aria-busy', 'true');
     }
 
-    // Display error message inside a container
-    function showError(container, msg = 'Failed to load feed. Please try again later.') {
-      container.innerHTML = `<div class="error-msg">${msg}</div>`;
+    // Display error message inside a container (but allow partial success)
+    function showError(container, msg = 'Some feeds failed to load. Please check your internet connection or try again later.') {
+      // Don't clear the valid stories already loaded, just add an error message at the end if missing items.
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'error-msg';
+      errorDiv.textContent = msg;
+      container.appendChild(errorDiv);
       container.setAttribute('aria-busy', 'false');
     }
 
-    // Load general stories
-    async function loadStories() {
-      const container = document.getElementById('stories');
+    // Robust loader for feeds: keeps working even if some feeds fail
+    async function loadFeedStories(feedList, sliceCount, containerId, alt) {
+      const container = document.getElementById(containerId);
+      showLoading(container);
+      let loadedAny = false;
       container.innerHTML = '';
-      for (const feed of feeds) {
+      const promises = feedList.map(async (feed) => {
         try {
           const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed)}`);
+          if (!res.ok) throw new Error('Request failed');
           const data = await res.json();
-          for (let item of data.items.slice(0, 5)) {
+          if (!data.items || !Array.isArray(data.items)) throw new Error('Invalid RSS data');
+          for (let item of data.items.slice(0, sliceCount)) {
             const img = await getMicrolinkImage(item.link, item.content || item.description);
             const div = document.createElement('div');
             div.className = 'story';
-            div.innerHTML = `<a href="${item.link}" target="_blank" rel="noopener noreferrer"><img src="${img}" alt="story"><p>${item.title}</p></a>`;
+            div.innerHTML = `<a href="${item.link}" target="_blank" rel="noopener noreferrer"><img src="${img}" alt="${alt}"><p>${item.title}</p></a>`;
             container.appendChild(div);
+            loadedAny = true;
           }
         } catch (err) {
-          console.error('Feed error:', feed, err);
-          showError(container);
+          console.error(`${alt} Feed error:`, feed, err);
+          // Don't break the loading, just note failure
         }
+      });
+      await Promise.all(promises);
+      if (!loadedAny) {
+        showError(container, `All ${alt} feeds failed to load.`);
+      } else if (container.children.length < feedList.length * sliceCount) {
+        showError(container, `Some ${alt} feeds failed to load.`);
       }
+      container.setAttribute('aria-busy', 'false');
     }
 
-    // Load hip hop stories
-    async function loadHipHopStories() {
-      const container = document.getElementById('hiphop-carousel');
-      container.innerHTML = '';
-      for (const feed of hiphopFeeds) {
-        try {
-          const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed)}`);
-          const data = await res.json();
-          for (let item of data.items.slice(0, 3)) {
-            const img = await getMicrolinkImage(item.link, item.content || item.description);
-            const div = document.createElement('div');
-            div.className = 'story';
-            div.innerHTML = `<a href="${item.link}" target="_blank" rel="noopener noreferrer"><img src="${img}" alt="hiphop"><p>${item.title}</p></a>`;
-            container.appendChild(div);
-          }
-        } catch (err) {
-          console.error('HipHop Feed error:', feed, err);
-          showError(container);
-        }
-      }
+    // Initial load & intervals (robust against partial failures)
+    function reloadAll() {
+      loadFeedStories(feeds, 5, 'stories', 'story');
+      loadFeedStories(hiphopFeeds, 3, 'hiphop-carousel', 'hiphop');
+      loadFeedStories(sportsFeeds, 2, 'rss-magazine', 'sports');
     }
-
-    // Load sports magazine slider stories
-    async function loadMagazineStories() {
-      const container = document.getElementById('rss-magazine');
-      container.innerHTML = '';
-      for (const feed of sportsFeeds) {
-        try {
-          const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed)}`);
-          const data = await res.json();
-          for (let item of data.items.slice(0, 2)) {
-            const img = await getMicrolinkImage(item.link, item.content || item.description);
-            const div = document.createElement('div');
-            div.className = 'story';
-            div.innerHTML = `<a href="${item.link}" target="_blank" rel="noopener noreferrer"><img src="${img}" alt="sports"><p>${item.title}</p></a>`;
-            container.appendChild(div);
-          }
-        } catch (err) {
-          console.error('Sports Feed error:', feed, err);
-          showError(container);
-        }
-      }
-    }
-
-    // Initial load & intervals
-    loadStories();
-    setInterval(loadStories, 300000); // every 5 minutes
-
-    loadHipHopStories();
-    setInterval(loadHipHopStories, 180000); // every 3 minutes
-
-    loadMagazineStories();
-    setInterval(loadMagazineStories, 240000); // every 4 minutes
+    reloadAll();
+    setInterval(() => loadFeedStories(feeds, 5, 'stories', 'story'), 300000); // every 5 minutes
+    setInterval(() => loadFeedStories(hiphopFeeds, 3, 'hiphop-carousel', 'hiphop'), 180000); // every 3 minutes
+    setInterval(() => loadFeedStories(sportsFeeds, 2, 'rss-magazine', 'sports'), 240000); // every 4 minutes
 
     // Disqus configuration
     var disqus_config = function () {
