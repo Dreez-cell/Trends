@@ -11,9 +11,6 @@
   <meta name="keywords" content="news, hip hop, sports, RSS, trending, Testagram" />
   <meta name="author" content="Testagram Team" />
 
-  <!-- AMP Auto Ads -->
-  <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js"></script>
-
   <!-- Google Adsense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6967873714106764" crossorigin="anonymous"></script>
 
@@ -134,7 +131,6 @@
       border-radius: 8px 8px 0 0;
       filter: drop-shadow(0 0 2px rgba(0,0,0,0.05));
       transition: filter 0.3s ease;
-      loading: lazy;
     }
     body.dark .story img {
       border-color: #555;
@@ -220,33 +216,12 @@
   </style>
 </head>
 <body>
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-analytics.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyBWb97lOaeRDlyC7kseF5OzZvFBTAtorJQ",
-    authDomain: "teatagram-a3a8f.firebaseapp.com",
-    projectId: "teatagram-a3a8f",
-    storageBucket: "teatagram-a3a8f.appspot.com", // ✅ FIXED
-    messagingSenderId: "835709485105",
-    appId: "1:835709485105:web:f70765b17d028e6e219510",
-    measurementId: "G-XF2WKT1TTE"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
-  <!-- AMP Auto Ads -->
-  <amp-auto-ads type="adsense" data-ad-client="ca-pub-6967873714106764"></amp-auto-ads>
-
   <header>
     <span>Testagram</span>
     <button class="theme-toggle" aria-label="Toggle dark/light theme" title="Toggle dark/light theme" onclick="toggleTheme()">🌙</button>
   </header>
 
   <main>
-
     <!-- General News Stories -->
     <section aria-labelledby="general-news-title">
       <h2 id="general-news-title" style="margin-bottom: 8px;">General News</h2>
@@ -297,11 +272,27 @@
         <div id="disqus_thread"></div>
       </div>
     </section>
-
   </main>
 
+  <!-- Firebase (move before body close for better hydration) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-analytics.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyBWb97lOaeRDlyC7kseF5OzZvFBTAtorJQ",
+      authDomain: "teatagram-a3a8f.firebaseapp.com",
+      projectId: "teatagram-a3a8f",
+      storageBucket: "teatagram-a3a8f.appspot.com",
+      messagingSenderId: "835709485105",
+      appId: "1:835709485105:web:f70765b17d028e6e219510",
+      measurementId: "G-XF2WKT1TTE"
+    };
+    const app = initializeApp(firebaseConfig);
+    getAnalytics(app);
+  </script>
+
   <script>
-    // RSS Feeds URLs
+    // --- FEEDS ---
     const feeds = [
       'https://www.capitalfm.co.ke/news/feed/',
       'https://www.standardmedia.co.ke/rss/headlines.php',
@@ -322,7 +313,6 @@
       'https://nairobinews.nation.africa/rss',
       'https://www.kbc.co.ke/feed/'
     ];
-
     const hiphopFeeds = [
       'https://allhiphop.com/feed/',
       'https://www.xxlmag.com/feed/',
@@ -344,7 +334,6 @@
       'https://respectmyregion.com/feed/',
       'https://siccness.net/rss.xml'
     ];
-
     const sportsFeeds = [
       'https://www.espn.com/espn/rss/news',
       'https://feeds.bbci.co.uk/sport/rss.xml?edition=uk',
@@ -356,13 +345,11 @@
       'https://www.supersport.com/rss'
     ];
 
-    // Utility: extract image from HTML string fallback
+    // --- IMAGE UTILS ---
     async function extractImageFromHTML(html) {
       const match = html?.match(/<img[^>]+src=["']([^"']+)["']/);
       return match ? match[1] : 'https://via.placeholder.com/140x100?text=No+Image';
     }
-
-    // Utility: get image using Microlink API fallback to HTML content
     async function getMicrolinkImage(url, fallbackHTML) {
       try {
         const res = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`);
@@ -373,15 +360,12 @@
       }
     }
 
-    // Display loading spinner inside a container
+    // --- LOADING/ERROR STATES ---
     function showLoading(container) {
       container.innerHTML = '<div class="spinner" aria-label="Loading"></div>';
       container.setAttribute('aria-busy', 'true');
     }
-
-    // Display error message inside a container (but allow partial success)
     function showError(container, msg = 'Some feeds failed to load. Please check your internet connection or try again later.') {
-      // Don't clear the valid stories already loaded, just add an error message at the end if missing items.
       const errorDiv = document.createElement('div');
       errorDiv.className = 'error-msg';
       errorDiv.textContent = msg;
@@ -389,9 +373,10 @@
       container.setAttribute('aria-busy', 'false');
     }
 
-    // Robust loader for feeds: keeps working even if some feeds fail
+    // --- MAIN FEED LOADER ---
     async function loadFeedStories(feedList, sliceCount, containerId, alt) {
       const container = document.getElementById(containerId);
+      if (!container) return;
       showLoading(container);
       let loadedAny = false;
       container.innerHTML = '';
@@ -405,13 +390,17 @@
             const img = await getMicrolinkImage(item.link, item.content || item.description);
             const div = document.createElement('div');
             div.className = 'story';
-            div.innerHTML = `<a href="${item.link}" target="_blank" rel="noopener noreferrer"><img src="${img}" alt="${alt}"><p>${item.title}</p></a>`;
+            // Securely inject link, image, and safe title (prevents XSS)
+            div.innerHTML = `<a href="${item.link}" target="_blank" rel="noopener noreferrer">
+  <img src="${img}" alt="${alt}">
+  <p></p>
+</a>`;
+            div.querySelector('p').textContent = item.title; // Prevent XSS from title
             container.appendChild(div);
             loadedAny = true;
           }
         } catch (err) {
           console.error(`${alt} Feed error:`, feed, err);
-          // Don't break the loading, just note failure
         }
       });
       await Promise.all(promises);
@@ -423,23 +412,22 @@
       container.setAttribute('aria-busy', 'false');
     }
 
-    // Initial load & intervals (robust against partial failures)
+    // --- LOAD & REFRESH ---
     function reloadAll() {
       loadFeedStories(feeds, 5, 'stories', 'story');
       loadFeedStories(hiphopFeeds, 3, 'hiphop-carousel', 'hiphop');
       loadFeedStories(sportsFeeds, 2, 'rss-magazine', 'sports');
     }
     reloadAll();
-    setInterval(() => loadFeedStories(feeds, 5, 'stories', 'story'), 300000); // every 5 minutes
-    setInterval(() => loadFeedStories(hiphopFeeds, 3, 'hiphop-carousel', 'hiphop'), 180000); // every 3 minutes
-    setInterval(() => loadFeedStories(sportsFeeds, 2, 'rss-magazine', 'sports'), 240000); // every 4 minutes
+    setInterval(() => loadFeedStories(feeds, 5, 'stories', 'story'), 300000);
+    setInterval(() => loadFeedStories(hiphopFeeds, 3, 'hiphop-carousel', 'hiphop'), 180000);
+    setInterval(() => loadFeedStories(sportsFeeds, 2, 'rss-magazine', 'sports'), 240000);
 
-    // Disqus configuration
+    // --- DISQUS ---
     var disqus_config = function () {
       this.page.url = window.location.href;
       this.page.identifier = window.location.pathname;
     };
-
     (function () {
       var d = document, s = d.createElement('script');
       s.src = 'https://celebrity-gossip-3.disqus.com/embed.js';
@@ -447,22 +435,19 @@
       (d.head || d.body).appendChild(s);
     })();
 
-    // Theme management functions
+    // --- THEME SWITCH ---
     function applyTheme(theme) {
       document.body.classList.remove('light', 'dark');
       document.body.classList.add(theme);
       const btn = document.querySelector('.theme-toggle');
       btn.textContent = theme === 'dark' ? '☀️' : '🌙';
     }
-
     function toggleTheme() {
       const current = document.body.classList.contains('dark') ? 'dark' : 'light';
       const newTheme = current === 'dark' ? 'light' : 'dark';
       applyTheme(newTheme);
       localStorage.setItem('theme', newTheme);
     }
-
-    // Initialize theme on page load
     (function initializeTheme() {
       const saved = localStorage.getItem('theme');
       const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -470,6 +455,5 @@
       applyTheme(themeToApply);
     })();
   </script>
-
 </body>
 </html>
