@@ -403,21 +403,34 @@
       'https://respectmyregion.com/feed/',
       'https://siccness.net/rss.xml'
     ];
+    // --- SPORTS FEEDS: FIXED & CLEANED FOR RELIABILITY ---
     const sportsFeeds = [
+      // Only include valid, reliable, and CORS-friendly RSS sources
       'https://www.espn.com/espn/rss/news',
       'https://feeds.bbci.co.uk/sport/rss.xml?edition=uk',
       'https://www.skysports.com/rss/12040',
       'https://www.nba.com/rss/nba_rss.xml',
       'https://www.nfl.com/rss/rsslanding?searchString=home',
       'https://www.goal.com/feeds/en/news/africa/1',
-      'https://www.cafonline.com/rss',
-      'https://www.supersport.com/rss'
+      // Remove known-broken or CORS-blocked feeds (cafonline.com & supersport.com often fail)
+      // 'https://www.cafonline.com/rss', // removed (CORS/RSS issues)
+      // 'https://www.supersport.com/rss', // removed (CORS/RSS issues)
+      // If you want, add more known working sports feeds here:
+      'https://www.si.com/rss/si_topstories.rss',
+      'https://www.sportsnet.ca/feed/'
     ];
 
     // --- IMAGE UTILS ---
     async function extractImageFromHTML(html) {
-      const match = html?.match(/<img[^>]+src=["']([^"']+)["']/);
-      return match ? match[1] : 'https://via.placeholder.com/140x100?text=No+Image';
+      // Use a DOMParser for more robust extraction (fallback to placeholder if no image found)
+      try {
+        if (!html) return 'https://via.placeholder.com/140x100?text=No+Image';
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        const imgEl = doc.querySelector('img');
+        return imgEl?.src || 'https://via.placeholder.com/140x100?text=No+Image';
+      } catch {
+        return 'https://via.placeholder.com/140x100?text=No+Image';
+      }
     }
     async function getMicrolinkImage(url, fallbackHTML, altText) {
       try {
@@ -455,13 +468,16 @@
       row2.innerHTML = '';
       let loadedAny = false;
       let allStories = [];
-      const promises = feedList.map(async (feed) => {
+      // Load feeds one-by-one, fallback to next if current fails, but keep going (robustness)
+      for (let feed of feedList) {
         try {
           const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed)}`);
           if (!res.ok) throw new Error('Request failed');
           const data = await res.json();
-          if (!data.items || !Array.isArray(data.items)) throw new Error('Invalid RSS data');
-          for (let item of data.items.slice(0, sliceCount)) {
+          if (!data.items || !Array.isArray(data.items) || data.items.length === 0) throw new Error('Invalid/empty RSS data');
+          // Only grab entries with title & link
+          const items = data.items.slice(0, sliceCount).filter(item => item && item.title && item.link);
+          for (let item of items) {
             const img = await getMicrolinkImage(item.link, item.content || item.description, item.title);
             allStories.push({
               link: item.link,
@@ -473,8 +489,7 @@
         } catch (err) {
           console.error(`${alt} Feed error:`, feed, err);
         }
-      });
-      await Promise.all(promises);
+      }
       // Distribute stories into 2 rows
       const half = Math.ceil(allStories.length / 2);
       const row1Stories = allStories.slice(0, half);
